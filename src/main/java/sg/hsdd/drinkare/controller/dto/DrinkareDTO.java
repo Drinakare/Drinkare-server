@@ -1,6 +1,5 @@
 package sg.hsdd.drinkare.controller.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TestDTO {
+public class DrinkareDTO {
     private String id;
-
+    private String user_id;
+    private String date;
+    private String soju;
+    private String beer;
 }
