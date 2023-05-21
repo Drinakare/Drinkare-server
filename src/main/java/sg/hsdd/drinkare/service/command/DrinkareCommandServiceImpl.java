@@ -47,7 +47,7 @@ public class DrinkareCommandServiceImpl implements DrinkareCommandService {
         partyRepository.save(party);
 
 
-        Optional<Statistic> statisticOptional = statisticRepository.findByUserIdAndPartyMonth(alcoholSaveCommandDTO.getUserId(), Long.valueOf(tempDate.getMonth()+1));
+        Optional<Statistic> statisticOptional = statisticRepository.findByUserIdAndPartyYearAndPartyMonth(alcoholSaveCommandDTO.getUserId(), Long.valueOf(tempDate.getYear()+1900), Long.valueOf(tempDate.getMonth()+1));
         Statistic statistic;
         if(statisticOptional.isPresent()){
             statistic = statisticOptional.get();
@@ -57,6 +57,7 @@ public class DrinkareCommandServiceImpl implements DrinkareCommandService {
         } else {
             statistic = Statistic.builder()
                     .userId(alcoholSaveCommandDTO.getUserId())
+                    .partyYear(Long.valueOf(tempDate.getYear()+1900))
                     .partyMonth(Long.valueOf(tempDate.getMonth()+1))
                     .partyCount(Long.valueOf(1))
                     .soju(alcoholSaveCommandDTO.getSoju())

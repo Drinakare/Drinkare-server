@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StatisticGetInfoQueryDTO {
     private Long userId;
-    private String date;
+//    private String date;
 }

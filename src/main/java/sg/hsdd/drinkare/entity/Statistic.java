@@ -1,6 +1,6 @@
 package sg.hsdd.drinkare.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +23,9 @@ public class Statistic {
 
     @Column
     private Long userId;
+
+    @Column
+    private Long partyYear;
 
     @Column
     private Long partyMonth;

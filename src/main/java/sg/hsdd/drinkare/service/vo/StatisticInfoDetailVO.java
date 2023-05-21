@@ -5,14 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class StatisticInfoVO {
-    private String name;
-    private Long age;
-    List<StatisticInfoDetailVO> list;
+public class StatisticInfoDetailVO {
+    private Long month;
+    private Long count;
+    private Long soju;
+    private Long beer;
 }

@@ -1,6 +1,6 @@
 package sg.hsdd.drinkare.service.query;
 
-import jakarta.servlet.http.Part;
+import javax.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,18 +13,12 @@ import sg.hsdd.drinkare.entity.User;
 import sg.hsdd.drinkare.repository.PartyRepository;
 import sg.hsdd.drinkare.repository.StatisticRepository;
 import sg.hsdd.drinkare.repository.UserRepository;
-import sg.hsdd.drinkare.service.vo.StatisticDetailListVO;
-import sg.hsdd.drinkare.service.vo.StatisticDetailVO;
-import sg.hsdd.drinkare.service.vo.StatisticInfoVO;
-import sg.hsdd.drinkare.service.vo.StatisticMonthVO;
+import sg.hsdd.drinkare.service.vo.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,41 +34,108 @@ public class DrinkareQueryServiceImpl implements DrinkareQueryService {
     @Autowired
     PartyRepository partyRepository;
 
+//    @Override
+//    public StatisticInfoVO getInfo(StatisticGetInfoQueryDTO statisticGetInfoQueryDTO){
+//
+//        Long month = Long.valueOf(new Date().getMonth()+1);
+//
+//        Optional<User> userOptional = userRepository.findById(statisticGetInfoQueryDTO.getUserId());
+//        Optional<Statistic> statisticOptional = statisticRepository.findByUserIdAndPartyMonth(statisticGetInfoQueryDTO.getUserId(), month);
+//        StatisticInfoVO statisticInfoVO;
+//
+//        if(userOptional.isPresent()){
+//            if(statisticOptional.isPresent()){
+//                statisticInfoVO = StatisticInfoVO.builder()
+//                        .age(userOptional.get().getAge())
+//                        .name(userOptional.get().getName())
+//                        .month(month)
+//                        .soju(statisticOptional.get().getSoju())
+//                        .beer(statisticOptional.get().getBeer())
+//                        .count(statisticOptional.get().getPartyCount())
+//                        .build();
+//            } else {
+//                statisticInfoVO = StatisticInfoVO.builder()
+//                        .age(userOptional.get().getAge())
+//                        .name(userOptional.get().getName())
+//                        .month(month)
+//                        .soju(Long.valueOf(0))
+//                        .beer(Long.valueOf(0))
+//                        .count(Long.valueOf(0))
+//                        .build();
+//            }
+//        } else {
+//            // error
+//            statisticInfoVO = StatisticInfoVO.builder()
+//                    .build();
+//        }
+//        return statisticInfoVO;
+//    }
+
     @Override
     public StatisticInfoVO getInfo(StatisticGetInfoQueryDTO statisticGetInfoQueryDTO){
 
         Long month = Long.valueOf(new Date().getMonth()+1);
+        Long year = Long.valueOf(new Date().getYear()+1900);
 
         Optional<User> userOptional = userRepository.findById(statisticGetInfoQueryDTO.getUserId());
-        Optional<Statistic> statisticOptional = statisticRepository.findByUserIdAndPartyMonth(statisticGetInfoQueryDTO.getUserId(), month);
-        StatisticInfoVO statisticInfoVO;
 
-        if(userOptional.isPresent()){
-            if(statisticOptional.isPresent()){
-                statisticInfoVO = StatisticInfoVO.builder()
-                        .age(userOptional.get().getAge())
-                        .name(userOptional.get().getName())
-                        .month(month)
-                        .soju(statisticOptional.get().getSoju())
-                        .beer(statisticOptional.get().getBeer())
-                        .count(statisticOptional.get().getPartyCount())
-                        .build();
-            } else {
-                statisticInfoVO = StatisticInfoVO.builder()
-                        .age(userOptional.get().getAge())
-                        .name(userOptional.get().getName())
-                        .month(month)
-                        .soju(Long.valueOf(0))
-                        .beer(Long.valueOf(0))
-                        .count(Long.valueOf(0))
-                        .build();
+        if(userOptional.isPresent()) {
+            List<Statistic> statisticList = statisticRepository
+                    .findByUserIdAndPartyYear(statisticGetInfoQueryDTO.getUserId(), year);
+
+
+            List<Long> monthList = new ArrayList();
+            for(int i=0;i<month;i++){
+                monthList.add(new Long(0));
             }
-        } else {
-            // error
-            statisticInfoVO = StatisticInfoVO.builder()
+
+
+            List<StatisticInfoDetailVO> statisticInfoDetailVOS = statisticList.stream().map(x -> {
+
+                if(monthList.get(x.getPartyMonth().intValue()-1)==0){
+                    monthList.set(x.getPartyMonth().intValue()-1, new Long(1));
+                }
+
+                return StatisticInfoDetailVO.builder()
+                                .month(x.getPartyMonth())
+                                .count(x.getPartyCount())
+                                .soju(x.getSoju())
+                                .beer(x.getBeer())
+                                .build();
+                    })
+                    //.sorted(Comparator.comparing(StatisticInfoDetailVO::getMonth))
+                    .collect(Collectors.toList());
+
+            for(int i=0;i<month;i++){
+                Long m = new Long(i+1);
+                if(monthList.get(i)==0){
+                    statisticInfoDetailVOS.add(
+                            StatisticInfoDetailVO.builder()
+                                    .month(m)
+                                    .count(Long.valueOf(0))
+                                    .soju(Long.valueOf(0))
+                                    .beer(Long.valueOf(0))
+                            .build());
+                }
+            }
+
+            statisticInfoDetailVOS = statisticInfoDetailVOS.stream()
+                    .sorted(Comparator.comparing(StatisticInfoDetailVO::getMonth))
+                    .collect(Collectors.toList());
+
+            StatisticInfoVO statisticInfoVO = StatisticInfoVO.builder()
+                    .name(userOptional.get().getName())
+                    .age(userOptional.get().getAge())
+                    .list(statisticInfoDetailVOS)
                     .build();
+
+            return statisticInfoVO;
         }
-        return statisticInfoVO;
+        else {
+            return StatisticInfoVO.builder().build();
+        }
+
+
     }
 
 
@@ -97,10 +158,10 @@ public class DrinkareQueryServiceImpl implements DrinkareQueryService {
             );
 
             List<StatisticDetailListVO> statisticDetailListVOS = parties.stream().map(x->StatisticDetailListVO.builder()
-                    .people(x.getPeople())
-                    .soju(x.getSoju())
-                    .beer(x.getBeer())
-                    .build())
+                            .people(x.getPeople())
+                            .soju(x.getSoju())
+                            .beer(x.getBeer())
+                            .build())
                     .collect(Collectors.toList());
 
             StatisticDetailVO statisticDetailVO = StatisticDetailVO.builder()
