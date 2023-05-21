@@ -161,6 +161,7 @@ public class DrinkareQueryServiceImpl implements DrinkareQueryService {
                             .people(x.getPeople())
                             .soju(x.getSoju())
                             .beer(x.getBeer())
+                            .image(x.getImgUrl())
                             .build())
                     .collect(Collectors.toList());
 

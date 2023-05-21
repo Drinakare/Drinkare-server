@@ -35,4 +35,7 @@ public class Party {
 
     @Column
     private Long beer;
+
+    @Column
+    private String imgUrl;
 }

@@ -24,7 +24,7 @@ public class DrinkareCommandServiceImpl implements DrinkareCommandService {
     private StatisticRepository statisticRepository;
 
     @Override
-    public void save(AlcoholSaveCommandDTO alcoholSaveCommandDTO){
+    public void save(AlcoholSaveCommandDTO alcoholSaveCommandDTO, String url){
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date tempDate;
@@ -42,6 +42,7 @@ public class DrinkareCommandServiceImpl implements DrinkareCommandService {
                 .soju(alcoholSaveCommandDTO.getSoju())
                 .beer(alcoholSaveCommandDTO.getBeer())
                 .partyDate(tempDate)
+                .imgUrl(url)
                 .build();
 
         partyRepository.save(party);

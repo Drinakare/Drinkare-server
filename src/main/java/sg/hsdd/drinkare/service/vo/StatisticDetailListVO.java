@@ -13,4 +13,5 @@ public class StatisticDetailListVO {
     private Long people;
     private Long soju;
     private Long beer;
+    private String image;
 }
