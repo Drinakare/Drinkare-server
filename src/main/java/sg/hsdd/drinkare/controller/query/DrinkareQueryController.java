@@ -2,6 +2,7 @@ package sg.hsdd.drinkare.controller.query;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import sg.hsdd.drinkare.service.vo.StatisticDetailVO;
 import sg.hsdd.drinkare.service.vo.StatisticInfoVO;
 import sg.hsdd.drinkare.service.vo.StatisticMonthVO;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/query")

@@ -25,4 +25,7 @@ public class User {
 
     @Column
     private Long age;
+
+    @Column
+    private String email;
 }

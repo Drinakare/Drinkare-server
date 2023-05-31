@@ -11,5 +11,4 @@ import java.util.List;
 public interface PartyRepository extends JpaRepository<Party, Long> {
     List<Party> findAllByUserIdAndPartyDate(Long userId, Date partyDate);
     List<Party> findAllByUserIdAndPartyDateBetween(Long userId, Date start, Date end);
-
 }
