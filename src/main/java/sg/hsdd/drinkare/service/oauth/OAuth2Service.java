@@ -51,6 +51,10 @@ public class OAuth2Service {
         log.info("{}=====>3", kakaoUserInfo.getProviderId());
         log.info("{}=====>4", kakaoUserInfo.getKakaoAccount().get("profile"));
         log.info("{}=====>5", kakaoUserInfo.getAttributes());
+        log.info("{}=====>6", kakaoUserInfo.getKakaoAccount());
+        log.info("{}=====>7", kakaoUserInfo.getKakaoAccount().get("age_range"));
+        log.info("{}=====>8", kakaoUserInfo);
+
 
 
 
@@ -58,6 +62,11 @@ public class OAuth2Service {
         String name = kakaoUserInfo.getKakaoAccount().get("profile").toString().substring(10);
         name = name.substring(0, name.length()-1);
         String email = kakaoUserInfo.getEmail();
+        String gender = kakaoUserInfo.getGender();
+        Long age = Long.parseLong(kakaoUserInfo.getAge().substring(0,1));
+        age *= 10;
+
+
 
         Optional<User> user = userRepository.findByEmail(email);
 
@@ -68,7 +77,8 @@ public class OAuth2Service {
                     User.builder()
                     .name(name)
                     .email(email)
-                            .age(new Long(1))
+                    .age(age)
+                    .gender(gender)
                     .build())
             ;
             isNew = true;

@@ -35,13 +35,15 @@ public class DrinkareCommandServiceImpl implements DrinkareCommandService {
             tempDate = new Date();
         }
 
+        java.sql.Date d = java.sql.Date.valueOf(alcoholSaveCommandDTO.getDate());
+
 
         Party party = Party.builder()
                 .userId(alcoholSaveCommandDTO.getUserId())
                 .people(alcoholSaveCommandDTO.getPeople())
                 .soju(alcoholSaveCommandDTO.getSoju())
                 .beer(alcoholSaveCommandDTO.getBeer())
-                .partyDate(tempDate)
+                .partyDate(d)
                 .imgUrl(url)
                 .build();
 

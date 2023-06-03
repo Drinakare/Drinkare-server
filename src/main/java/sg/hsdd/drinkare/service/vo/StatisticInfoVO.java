@@ -14,5 +14,6 @@ import java.util.List;
 public class StatisticInfoVO {
     private String name;
     private Long age;
+    private String gender;
     List<StatisticInfoDetailVO> list;
 }

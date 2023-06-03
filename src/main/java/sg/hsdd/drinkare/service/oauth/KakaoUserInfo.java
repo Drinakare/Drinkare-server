@@ -21,6 +21,14 @@ public class KakaoUserInfo {
         return (String) getKakaoAccount().get("nickname");
     }
 
+    public String getGender() {
+        return (String) getKakaoAccount().get("gender");
+    }
+
+    public String getAge() {
+        return (String) getKakaoAccount().get("age_range");
+    }
+
     public Map<String, Object> getKakaoAccount(){
         return(Map<String, Object>) attributes.get("kakao_account");
     }

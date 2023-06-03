@@ -92,7 +92,7 @@ public class SecurityConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .redirectUri(env.getProperty(CLIENT_PROPERTY_KEY+".kakao.redirect-uri"))
-                .scope("profile", "account_email")
+                .scope("profile", "account_email", "age_range", "gender")
                 .authorizationUri("https://kauth.kakao.com/oauth/authorize")
                 .tokenUri("https://kauth.kakao.com/oauth/token")
                 .userInfoUri("https://kapi.kakao.com/v2/user/me")

@@ -126,6 +126,7 @@ public class DrinkareQueryServiceImpl implements DrinkareQueryService {
             StatisticInfoVO statisticInfoVO = StatisticInfoVO.builder()
                     .name(userOptional.get().getName())
                     .age(userOptional.get().getAge())
+                    .gender(userOptional.get().getGender())
                     .list(statisticInfoDetailVOS)
                     .build();
 
@@ -141,20 +142,22 @@ public class DrinkareQueryServiceImpl implements DrinkareQueryService {
 
     @Override
     public StatisticDetailVO getDetail(StatisticGetDetailQueryDTO statisticGetDetailQueryDTO){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date tempDate;
-        try{
-            tempDate = dateFormat.parse(statisticGetDetailQueryDTO.getDate());
-        }
-        catch(ParseException ex){
-            tempDate = new Date();
-        }
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        Date tempDate;
+//        try{
+//            tempDate = dateFormat.parse(statisticGetDetailQueryDTO.getDate());
+//        }
+//        catch(ParseException ex){
+//            tempDate = new Date();
+//        }
+
+        java.sql.Date d = java.sql.Date.valueOf(statisticGetDetailQueryDTO.getDate());
 
         Optional<User> userOptional = userRepository.findById(statisticGetDetailQueryDTO.getUserId());
         if(userOptional.isPresent()){
             List<Party> parties = partyRepository.findAllByUserIdAndPartyDate(
                     statisticGetDetailQueryDTO.getUserId(),
-                    tempDate
+                    d
             );
 
             List<StatisticDetailListVO> statisticDetailListVOS = parties.stream().map(x->StatisticDetailListVO.builder()
